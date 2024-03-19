@@ -8,6 +8,7 @@ using OpenAI_API;
 using OpenAI_API.Chat;
 using System;
 using OpenAI_API.Models;
+using System.IO;
 
 public class AIController : MonoBehaviour
 {
@@ -20,16 +21,18 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+        string TextforTest = ReadTextFile("TextforTest");
         api = new OpenAIAPI(Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.User));
-        StartConversation();
+        StartConversation(TextforTest);
         okButton.onClick.AddListener(() => GetResponse());
     }
 
-    private void StartConversation()
+    private void StartConversation(string str)
     {
         messages = new List<ChatMessage>
         {
-            new ChatMessage(ChatMessageRole.System, "Hello! Who are you?")
+            new ChatMessage(ChatMessageRole.System, str)
         };
 
         inputField.text = "";
@@ -87,10 +90,27 @@ public class AIController : MonoBehaviour
         messages.Add(responseMessage);
 
         //
-        textField.text = string.Format("You: {0}\n\nOrangeCat: {1}", userMessage.Content, responseMessage.Content);
+        textField.text = string.Format("You: {0}\nRobin: {1}", userMessage.Content, responseMessage.Content);
 
         //
         okButton.enabled = true;
 
+    }
+
+    string ReadTextFile(string fileName)
+    {
+        // 拼接文件路径
+        string filePath = "Assets/Scripts/" + fileName + ".txt";
+
+        // 读取文本文件的所有行
+        string[] lines = File.ReadAllLines(filePath);
+
+        // 将所有行连接成一个字符串
+        string fileContent = string.Join("\n", lines);
+
+        // 打印文件内容（你也可以将文件内容传递给其他函数或组件进行处理）
+        Debug.Log("Text file content:\n" + fileContent);
+
+        return fileContent;
     }
 }
