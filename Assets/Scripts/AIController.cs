@@ -15,6 +15,7 @@ public class AIController : MonoBehaviour
     public TMP_Text textField;
     public TMP_InputField inputField;
     public Button okButton;
+    public String srting;
 
     private OpenAIAPI api;
     private List<ChatMessage> messages;
@@ -24,7 +25,7 @@ public class AIController : MonoBehaviour
         
         string TextforTest = ReadTextFile("TextforTest");
         api = new OpenAIAPI(Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.User));
-        StartConversation(TextforTest);
+        StartConversation(srting);
         okButton.onClick.AddListener(() => GetResponse());
     }
 
@@ -36,7 +37,7 @@ public class AIController : MonoBehaviour
         };
 
         inputField.text = "";
-        string startString = "You are a cat.";
+        string startString = "Hello!";
         textField.text = startString;
         Debug.Log(startString);
 
@@ -90,7 +91,7 @@ public class AIController : MonoBehaviour
         messages.Add(responseMessage);
 
         //
-        textField.text = string.Format("You: {0}\nRobin: {1}", userMessage.Content, responseMessage.Content);
+        textField.text = string.Format("You: {0}\nAlan: {1}", userMessage.Content, responseMessage.Content);
 
         //
         okButton.enabled = true;
