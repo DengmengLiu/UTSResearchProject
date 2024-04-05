@@ -8,25 +8,50 @@ using OpenAI_API;
 using OpenAI_API.Chat;
 using System;
 using OpenAI_API.Models;
-using System.IO;
 
 public class AIController : MonoBehaviour
 {
+    [Header("UI Component")]
     public TMP_Text textField;
     public TMP_InputField inputField;
     public Button okButton;
-    public String srting;
+    [Header("Text File")]
+    public TextAsset backgroundTextFile;
 
     private OpenAIAPI api;
     private List<ChatMessage> messages;
+
+    private List<string>textList = new List<string>();
+    public int index;
+
     // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
-        
-        string TextforTest = ReadTextFile("TextforTest");
         api = new OpenAIAPI(Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.User));
-        StartConversation(srting);
+        StartConversation(GetTextFromFile(backgroundTextFile));
+        
         okButton.onClick.AddListener(() => GetResponse());
+    }
+    private void OnEnable()
+    {
+        textField.text = textList[index];
+        index++;
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.N) && index == textList.Count) 
+        {
+            gameObject.SetActive(false);
+            index = 0;
+            return;
+        }
+        if (Input.GetKeyUp(KeyCode.N)) 
+        {
+            textField.text = textList[index];
+            index++;
+        }
     }
 
     private void StartConversation(string str)
@@ -77,7 +102,7 @@ public class AIController : MonoBehaviour
         {
             Model = Model.ChatGPTTurbo,
             Temperature = 0.1,
-            MaxTokens = 50,
+            MaxTokens = 100,
             Messages = messages
         });
 
@@ -91,27 +116,33 @@ public class AIController : MonoBehaviour
         messages.Add(responseMessage);
 
         //
-        textField.text = string.Format("You: {0}\nAlan: {1}", userMessage.Content, responseMessage.Content);
+        textList.Clear();
+        index = 0;
 
+        var lineData = string.Format("You: {0}\nAlan: {1}", userMessage.Content, responseMessage.Content).Split('.');
+
+        foreach ( var line in lineData )
+        {
+            textList.Add(line + '.');
+        }
+        
         //
         okButton.enabled = true;
 
     }
 
-    string ReadTextFile(string fileName)
+    //
+    string GetTextFromFile(TextAsset file)
     {
-        // 拼接文件路径
-        string filePath = "Assets/Scripts/" + fileName + ".txt";
-
-        // 读取文本文件的所有行
-        string[] lines = File.ReadAllLines(filePath);
-
-        // 将所有行连接成一个字符串
-        string fileContent = string.Join("\n", lines);
-
-        // 打印文件内容（你也可以将文件内容传递给其他函数或组件进行处理）
-        Debug.Log("Text file content:\n" + fileContent);
-
-        return fileContent;
+        if (file != null)
+        {
+            string fileContent = file.text;
+            return fileContent;
+        }
+        else
+        {
+            Debug.LogError("Please provide a valid TextAsset.");
+            return null;
+        }
     }
 }
