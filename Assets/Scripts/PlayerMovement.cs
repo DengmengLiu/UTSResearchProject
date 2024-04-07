@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public Animator ar;
 
     private Vector2 moveDir;
-
+    private static bool canMove = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,12 +20,18 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ProcessInputs(); 
+        if (canMove)
+        {
+            ProcessInputs();
+        }         
     }
 
     void FixedUpdate()
     {
-        Move();
+        if ( canMove)
+        {
+            Move();
+        }
     }
 
     void ProcessInputs()
@@ -44,4 +50,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rigbody2D.velocity = new Vector2(moveDir.x * moveSpeed, moveDir.y *moveSpeed);
     }
+
+    public static void DisableMovement() => canMove = false;
+
+    public static void EnableMovement() => canMove = true;
 }

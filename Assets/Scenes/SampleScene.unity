@@ -1088,6 +1088,7 @@ MonoBehaviour:
   inputField: {fileID: 49704587}
   okButton: {fileID: 1370223425}
   backgroundTextFile: {fileID: 4900000, guid: 04cf5a3da9a5f3e41a6a7987fbd3e1a9, type: 3}
+  textSpeed: 0.1
   index: 10
 --- !u!1001 &289757217
 PrefabInstance:
@@ -1422,7 +1423,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1439,8 +1440,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
-  m_fontSizeBase: 6
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -17,12 +17,18 @@ public class AIController : MonoBehaviour
     public Button okButton;
     [Header("Text File")]
     public TextAsset backgroundTextFile;
+    public float textSpeed;
+    [Header("Avatar")]
+    public Sprite playerAvatar, targetAvatar;
 
     private OpenAIAPI api;
     private List<ChatMessage> messages;
 
     private List<string>textList = new List<string>();
     public int index;
+
+    private bool isTextFinished;
+    private bool canceledTyping;
 
     // Start is called before the first frame update
 
@@ -35,22 +41,30 @@ public class AIController : MonoBehaviour
     }
     private void OnEnable()
     {
-        textField.text = textList[index];
-        index++;
+        StartCoroutine(SetTextUI());
+        isTextFinished = true;
     }
 
     void Update()
     {
-        if(Input.GetKeyUp(KeyCode.N) && index == textList.Count) 
+        if(Input.GetKeyUp(KeyCode.Return) && index == textList.Count) 
         {
             gameObject.SetActive(false);
             index = 0;
+            PlayerMovement.EnableMovement();
             return;
         }
-        if (Input.GetKeyUp(KeyCode.N)) 
+        if (Input.GetKeyUp(KeyCode.Return)) 
         {
-            textField.text = textList[index];
-            index++;
+            if(isTextFinished && !canceledTyping)
+            {
+                StartCoroutine(SetTextUI());
+            }
+            else if (!isTextFinished) 
+            {
+                canceledTyping = !canceledTyping;                
+            } 
+            
         }
     }
 
@@ -61,10 +75,10 @@ public class AIController : MonoBehaviour
             new ChatMessage(ChatMessageRole.System, str)
         };
 
-        inputField.text = "";
+        /*inputField.text = "";
         string startString = "Hello!";
         textField.text = startString;
-        Debug.Log(startString);
+        Debug.Log(startString);*/
 
     }
 
@@ -92,7 +106,7 @@ public class AIController : MonoBehaviour
         messages.Add(userMessage);
 
         // Update the text field with the user message
-        textField.text = string.Format("You: {0}", userMessage.Content);
+        //textField.text = string.Format("You: {0}", userMessage.Content);
 
         //Clear the input field
         inputField.text = "";
@@ -119,7 +133,7 @@ public class AIController : MonoBehaviour
         textList.Clear();
         index = 0;
 
-        var lineData = string.Format("You: {0}\nAlan: {1}", userMessage.Content, responseMessage.Content).Split('.');
+        var lineData = string.Format("You: {0}.Alan: {1}", userMessage.Content, responseMessage.Content).Split('.');
 
         foreach ( var line in lineData )
         {
@@ -144,5 +158,23 @@ public class AIController : MonoBehaviour
             Debug.LogError("Please provide a valid TextAsset.");
             return null;
         }
+    }
+
+    IEnumerator SetTextUI()
+    {
+        isTextFinished = false;
+        textField.text = "";
+
+        int letter = 0;
+        while(!canceledTyping && letter < textList[index].Length - 1) 
+        {
+            textField.text += textList[index][letter];
+            letter++;
+            yield return new WaitForSeconds(textSpeed);
+        }
+        textField.text = textList[index];
+        canceledTyping = false;
+        isTextFinished = true;
+        index++;
     }
 }
