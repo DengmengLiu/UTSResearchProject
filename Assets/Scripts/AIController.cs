@@ -16,8 +16,9 @@ public class AIController : MonoBehaviour
     public TMP_InputField inputField;
     public Button okButton;
     [Header("Text File")]
-    public TextAsset backgroundTextFile;
+    public List<TextAsset> backgroundTextFile;
     public float textSpeed;
+    public string str;
     [Header("Avatar")]
     public Sprite playerAvatar, targetAvatar;
 
@@ -35,7 +36,7 @@ public class AIController : MonoBehaviour
     void Awake()
     {
         api = new OpenAIAPI(Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.User));
-        StartConversation(GetTextFromFile(backgroundTextFile));
+        StartConversation(GetTextFromFile(backgroundTextFile[0]));
         
         okButton.onClick.AddListener(() => GetResponse());
     }
