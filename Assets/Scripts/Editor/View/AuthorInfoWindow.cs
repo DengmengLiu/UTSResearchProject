@@ -1,4 +1,3 @@
-
 using UnityEditor;
 using UnityEngine;
 
@@ -40,7 +39,5 @@ public class AuthorInfoWindow : EditorWindow
 
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
-
     }
-
 }

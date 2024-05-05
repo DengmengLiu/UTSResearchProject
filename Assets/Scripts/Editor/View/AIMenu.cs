@@ -1,11 +1,8 @@
-﻿using Npgsql;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class AIMenu : EditorWindow
 {
-
     [MenuItem("AI Menu/Database connection setup", false, 0)]
     public static void DBConnectionSetup()
     {
@@ -17,12 +14,13 @@ public class AIMenu : EditorWindow
     {
         Debug.Log(DBConnWindow.IsConnected);
     }
-    
+
     [MenuItem("AI Menu/Database View/NPC", false, 2)]
     public static void NPCTable()
     {
         DBWindow.CreateWindow("NPC");
     }
+
     [MenuItem("AI Menu/Database View/NPC", true)]
     public static bool ValidateNPCTable()
     {
@@ -34,6 +32,7 @@ public class AIMenu : EditorWindow
     {
         DBWindow.CreateWindow("Knowledge");
     }
+
     [MenuItem("AI Menu/Database View/Knowledge", true)]
     public static bool ValidateKnowledgeTable()
     {
@@ -45,5 +44,4 @@ public class AIMenu : EditorWindow
     {
         AuthorInfoWindow.CreateWindow();
     }
-
 }

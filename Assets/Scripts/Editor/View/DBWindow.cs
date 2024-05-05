@@ -1,42 +1,48 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class DBWindow : EditorWindow
 {
     private Vector2 scrollPosition;
     private List<NPC> npcData;
-    private List<Knowledge> KnowledgeData;
-    private int selectedNPCIndex = -1;
+    private List<Knowledge> knowledgeData;
+    private int selectedIndex = -1;
     private static NPC selectedNPC;
+    private static Knowledge selectedKnowledge;
     private static string windowType;
 
     public static void CreateWindow(string name)
     {
-        GetWindow<DBWindow>("Database Table");
+        DBWindow window = GetWindow<DBWindow>("Database Table");
         windowType = name;
+        window.minSize = new Vector2(800, 300);
     }
+
     private async void LoadNPCData()
     {
-        string selectQuery = "SELECT * FROM NPC";
-        npcData = await DataController.ExecuteQueryAsync<NPC>(reader => new NPC(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)), selectQuery);
+        npcData = await NPCManager.GetAllNPCs();
     }
+
     private async void LoadKnowledgeData()
     {
-        string selectQuery = "SELECT * FROM Knowledge";
-        KnowledgeData = await DataController.ExecuteQueryAsync<Knowledge>(reader => new Knowledge(reader.GetInt32(0), reader.GetString(1)), selectQuery);
+        knowledgeData = await KnowledgeManager.GetAllKnowledge();
     }
+
     private void OnEnable()
     {
         LoadNPCData();
         LoadKnowledgeData();
 
         NPCSubWindow.OnNPCModifyed += LoadNPCData;
+        KnowledgeSubWindow.OnKnowledgeModified += LoadKnowledgeData;
     }
 
     private void OnDisable()
     {
         NPCSubWindow.OnNPCModifyed -= LoadNPCData;
+        KnowledgeSubWindow.OnKnowledgeModified -= LoadKnowledgeData;
     }
 
     void OnGUI()
@@ -49,12 +55,12 @@ public class DBWindow : EditorWindow
         {
             KnowledgeView();
         }
-        else 
+        else
         {
             ErrorView();
         }
-        
     }
+
     private void NPCView()
     {
         GUILayout.Space(4);
@@ -72,7 +78,7 @@ public class DBWindow : EditorWindow
         GUILayout.Label("ID", EditorStyles.boldLabel, GUILayout.Width(50));
         GUILayout.Label("Name", EditorStyles.boldLabel, GUILayout.Width(80));
         GUILayout.Label("Personality", EditorStyles.boldLabel, GUILayout.Width(120));
-        GUILayout.Label("Person Summry", EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
+        GUILayout.Label("Person Summary", EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
         GUILayout.EndHorizontal();
         GUILayout.Space(4);
 
@@ -88,35 +94,34 @@ public class DBWindow : EditorWindow
 
                 GUILayout.BeginHorizontal();
 
-                bool isSelected = selectedNPCIndex == i;
-                if (GUILayout.Button(isSelected ? "âˆš" : "", GUILayout.Width(20)))
+                bool isSelected = selectedIndex == i;
+                if (GUILayout.Button(isSelected ? "¡Ì" : "", GUILayout.Width(20)))
                 {
-                    selectedNPCIndex = isSelected ? -1 : i;
+                    selectedIndex = isSelected ? -1 : i;
                 }
 
-                GUILayout.Label(npc.npc_id.ToString(), GUILayout.Width(50));
-                GUILayout.Label(npc.npc_name, GUILayout.Width(80));
-                GUILayout.Label(npc.personality, GUILayout.Width(120));            
-                GUILayout.Label(npc.person_summrise, GUILayout.Width(450));
+                GUILayout.Label(npc.Npc_id.ToString(), GUILayout.Width(50));
+                GUILayout.Label(npc.Npc_name, GUILayout.Width(80));
+                GUILayout.Label(npc.Personality, GUILayout.Width(120));
+                GUILayout.Label(npc.Person_summrise, GUILayout.Width(450));
                 GUILayout.EndHorizontal();
             }
-        
         }
 
         EditorGUILayout.EndScrollView();
 
-        GUILayout.BeginHorizontal();
+        GUILayout.BeginHorizontal(GUILayout.Height(25));
 
-        if (GUILayout.Button("Add new NPC"))
+        if (GUILayout.Button("Add new NPC", GUILayout.Height(25)))
         {
             NPCSubWindow.CreateNPCDetailsWindow();
         }
 
-        if (GUILayout.Button("Update selected NPC"))
+        if (GUILayout.Button("Update selected NPC", GUILayout.Height(25)))
         {
-            if (selectedNPCIndex != -1 && npcData != null && selectedNPCIndex < npcData.Count)
+            if (selectedIndex != -1 && npcData != null && selectedIndex < npcData.Count)
             {
-                selectedNPC = npcData[selectedNPCIndex];
+                selectedNPC = npcData[selectedIndex];
                 NPCSubWindow.CreateNPCDetailsWindow(selectedNPC);
             }
             else
@@ -125,47 +130,58 @@ public class DBWindow : EditorWindow
             }
         }
 
-        if (GUILayout.Button("Delete selected NPC"))
+        if (GUILayout.Button("Delete selected NPC", GUILayout.Height(25)))
         {
-            if (selectedNPCIndex != -1 && npcData != null && selectedNPCIndex < npcData.Count)
+            if (selectedIndex != -1 && npcData != null && selectedIndex < npcData.Count)
             {
-                NPC selectedNPC = npcData[selectedNPCIndex];
-                DeleteNPC(selectedNPC.npc_id);
+                NPC selectedNPC = npcData[selectedIndex];
+                DeleteData("NPC", selectedNPC.Npc_id);
             }
             else
             {
                 EditorUtility.DisplayDialog("Error", "No NPC selected!", "OK");
             }
         }
-        if (GUILayout.Button("Assign Knowledge to selected NPC"))
+
+        if (GUILayout.Button("Assign Knowledge to selected NPC", GUILayout.Height(25)))
         {
-            Debug.Log("Button 4 clicked");
+            if (selectedIndex != -1 && npcData != null && selectedIndex < npcData.Count)
+            {
+                selectedNPC = npcData[selectedIndex];
+                AssignKnowledgeToNPCWindow.CreateWindow(selectedNPC);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", "Please select a NPC", "OK");
+            }
         }
 
         GUILayout.EndHorizontal();
     }
 
-    private async void DeleteNPC(int npcId)
+    private async void DeleteData(string tableName, int id)
     {
-        string deleteQuery = $"DELETE FROM NPC WHERE npc_id = {npcId}";
+        string deleteQuery = $"DELETE FROM {tableName} WHERE {tableName}_id = {id}";
         bool deleted = await DataController.ExecuteNonQueryAsync(deleteQuery);
 
         if (deleted)
         {
-            EditorUtility.DisplayDialog("Success", "NPC deleted successfully!", "OK");
-            LoadNPCData(); 
+            EditorUtility.DisplayDialog("Success", tableName + " deleted successfully!", "OK");
+            LoadNPCData();
+            LoadKnowledgeData();
         }
         else
         {
-            EditorUtility.DisplayDialog("Error", "Failed to delete NPC!", "OK");
+            EditorUtility.DisplayDialog("Error", "Failed to delete " + tableName + "!", "OK");
         }
     }
+
     private void KnowledgeView()
     {
         GUILayout.Space(4);
         GUI.skin.label.fontSize = 24;
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-        GUILayout.Label("Knowledge Details");
+        GUILayout.Label("Knowledge Details", GUILayout.Height(32));
 
         GUILayout.Space(4);
         GUI.skin.label.fontSize = 14;
@@ -179,9 +195,68 @@ public class DBWindow : EditorWindow
         GUILayout.EndHorizontal();
         GUILayout.Space(4);
 
+        GUI.skin.label.fontSize = 12;
+        GUI.skin.label.wordWrap = true;
+
+        if (knowledgeData != null)
+        {
+            for (int i = 0; i < knowledgeData.Count; i++)
+            {
+                Knowledge knowledge = knowledgeData[i];
+
+                GUILayout.BeginHorizontal();
+
+                bool isSelected = selectedIndex == i;
+                if (GUILayout.Button(isSelected ? "¡Ì" : "", GUILayout.Width(20)))
+                {
+                    selectedIndex = isSelected ? -1 : i;
+                }
+
+                GUILayout.Label(knowledge.Knowledge_id.ToString(), GUILayout.Width(50));
+                GUILayout.Label(knowledge.Knowledge_content);
+
+                GUILayout.EndHorizontal();
+            }
+        }
+
         EditorGUILayout.EndScrollView();
+
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Add new Knowledge", GUILayout.Height(25)))
+        {
+            KnowledgeSubWindow.CreateKnowledgeDetailsWindow();
+        }
+
+        if (GUILayout.Button("Update selected Knowledge", GUILayout.Height(25)))
+        {
+            if (selectedIndex != -1 && knowledgeData != null && selectedIndex < knowledgeData.Count)
+            {
+                selectedKnowledge = knowledgeData[selectedIndex];
+                KnowledgeSubWindow.CreateKnowledgeDetailsWindow(selectedKnowledge);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", "Please select a Knowledge", "OK");
+            }
+        }
+
+        if (GUILayout.Button("Delete selected Knowledge", GUILayout.Height(25)))
+        {
+            if (selectedIndex != -1 && knowledgeData != null && selectedIndex < knowledgeData.Count)
+            {
+                Knowledge selectedKnowledge = knowledgeData[selectedIndex];
+                DeleteData("Knowledge", selectedKnowledge.Knowledge_id);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", "No Knowledge selected!", "OK");
+            }
+        }
+
+        GUILayout.EndHorizontal();
     }
-    
+
     private void ErrorView()
     {
         GUILayout.BeginVertical();
@@ -195,3 +270,4 @@ public class DBWindow : EditorWindow
         GUILayout.EndVertical();
     }
 }
+

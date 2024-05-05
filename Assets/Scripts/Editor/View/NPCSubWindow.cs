@@ -1,5 +1,3 @@
-﻿using System;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,7 +17,14 @@ public class NPCSubWindow : EditorWindow
         NPCSubWindow window = GetWindow<NPCSubWindow>("NPC Info");
         window.minSize = new Vector2(400, 250);
         window.maxSize = new Vector2(400, 250);
-        window.npcToUpdate = npc; 
+        window.npcToUpdate = npc;
+
+        if (npc != null)
+        {
+            window.npcName = npc.Npc_name;
+            window.npcPersonality = npc.Personality;
+            window.npcSummary = npc.Person_summrise;
+        }
     }
 
     private void OnGUI()
@@ -34,11 +39,11 @@ public class NPCSubWindow : EditorWindow
         }
     }
 
-    private void Detail(string lable, bool isUpdatingWindow)
+    private void Detail(string label, bool isUpdatingWindow)
     {
         GUI.skin.label.fontSize = 18;
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-        GUILayout.Label(lable, GUILayout.Height(25));
+        GUILayout.Label(label, GUILayout.Height(25));
 
         GUILayout.Space(4);
         GUI.skin.label.fontSize = 12;
@@ -48,11 +53,11 @@ public class NPCSubWindow : EditorWindow
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("ID:", GUILayout.Width(75));
-            GUILayout.Label(npcToUpdate.npc_id.ToString());
+            GUILayout.Label(npcToUpdate.Npc_id.ToString());
             GUILayout.EndHorizontal();
             GUILayout.Space(4);
         }
-        else 
+        else
         {
             GUILayout.Space(16);
         }
@@ -73,7 +78,7 @@ public class NPCSubWindow : EditorWindow
         GUILayout.Label("Summary:", GUILayout.Width(75));
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Height(100));
         EditorStyles.textArea.wordWrap = true;
-        npcSummary = EditorGUILayout.TextArea(npcSummary, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200)); 
+        npcSummary = EditorGUILayout.TextArea(npcSummary, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200));
         EditorGUILayout.EndScrollView();
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
@@ -93,9 +98,7 @@ public class NPCSubWindow : EditorWindow
 
     private async void UpdateNPC()
     {
-        string updateQuery = "UPDATE NPC SET npc_name = '" + npcName + "', personality = '" + npcPersonality + "', person_summrise = '" + npcSummary + "' WHERE npc_id = " + npcToUpdate.npc_id + ";";
-
-        bool success = await DataController.ExecuteNonQueryAsync(updateQuery);
+        bool success = await NPCManager.UpdateNPC(npcToUpdate.Npc_id, npcName, npcPersonality, npcSummary);
 
         if (success)
         {
@@ -111,9 +114,7 @@ public class NPCSubWindow : EditorWindow
 
     private async void AddNPC()
     {
-        string insertQuery = "INSERT INTO NPC (npc_name, personality, person_summrise) VALUES ('" + npcName + "', '" + npcPersonality + "', '" + npcSummary + "');";
-
-        bool success = await DataController.ExecuteNonQueryAsync(insertQuery);
+        bool success = await NPCManager.AddNPC(npcName, npcPersonality, npcSummary);
 
         if (success)
         {
@@ -125,5 +126,5 @@ public class NPCSubWindow : EditorWindow
         {
             EditorUtility.DisplayDialog("Error", "Failed to add NPC!", "OK");
         }
-    }    
+    }
 }

@@ -101,7 +101,7 @@ public class AIController : MonoBehaviour
         {
             userMessage.Content = userMessage.Content.Substring(0, 100);
         }
-        Debug.Log(string.Format("{0}: {1}", userMessage.rawRole, userMessage.Content));
+        Debug.Log(string.Format("{0}: {1}", userMessage.Role, userMessage.Content));
 
         // Add the message to the list
         messages.Add(userMessage);
@@ -125,7 +125,7 @@ public class AIController : MonoBehaviour
         ChatMessage responseMessage = new ChatMessage();
         responseMessage.Role = chatResult.Choices[0].Message.Role;
         responseMessage.Content = chatResult.Choices[0].Message.Content;
-        Debug.Log(string.Format("{0}; {1}", responseMessage.rawRole, responseMessage.Content));
+        Debug.Log(string.Format("{0}; {1}", responseMessage.Role, responseMessage.Content));
 
         //
         messages.Add(responseMessage);
