@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,26 +19,26 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
 
         window.selectedNPC = npc;
 
-        // ��ʼ�� knowledgeSelection �ֵ�
+        // ³õÊ¼»¯ knowledgeSelection ×Öµä
         window.knowledgeSelection = new Dictionary<Knowledge, bool>();
 
-        // ��ѯ�ѷ���� NPC ��֪ʶ
+        // ²éÑ¯ÒÑ·ÖÅä¸ø NPC µÄÖªÊ¶
         List<Knowledge> assignedKnowledge = await KnowledgeManager.GetAssignedKnowledge(npc.Npc_id);
 
-        // ��ѯδ����� NPC ��֪ʶ
+        // ²éÑ¯Î´·ÖÅä¸ø NPC µÄÖªÊ¶
         List <Knowledge> unassignedKnowledge = await KnowledgeManager.GetUnassignedKnowledge(npc.Npc_id);
 
         window.assignedKnowledge = assignedKnowledge;
         window.unassignedKnowledge = unassignedKnowledge;
 
-        // ��ʼ�� knowledgeSelection �ֵ�
+        // ³õÊ¼»¯ knowledgeSelection ×Öµä
         foreach (Knowledge knowledge in assignedKnowledge)
         {
-            window.knowledgeSelection.Add(knowledge, false); // Ĭ��ѡ���ѷ����֪ʶ
+            window.knowledgeSelection.Add(knowledge, false); // Ä¬ÈÏÑ¡ÖÐÒÑ·ÖÅäµÄÖªÊ¶
         }
         foreach (Knowledge knowledge in unassignedKnowledge)
         {
-            window.knowledgeSelection.Add(knowledge, false); // Ĭ��δѡ��δ�����֪ʶ
+            window.knowledgeSelection.Add(knowledge, false); // Ä¬ÈÏÎ´Ñ¡ÖÐÎ´·ÖÅäµÄÖªÊ¶
         }
     }
 
@@ -53,18 +53,18 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
         GUI.skin.label.fontSize = 12;
         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
 
-        // �Ѿ�assign��knowledge��
+        // ÒÑ¾­assignµÄknowledge¿ò
         DrawAssignedKnowledgeBox();
         GUILayout.Space(5);
 
-        // ��ť����
+        // °´Å¥ÇøÓò 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("��", GUILayout.Width(150)))
+        if (GUILayout.Button("↑", GUILayout.Width(150)))
         {
             AssignSelectedKnowledge();
         }
-        if (GUILayout.Button("��", GUILayout.Width(150)))
+        if (GUILayout.Button("↓", GUILayout.Width(150)))
         {
             UnassignSelectedKnowledge();
         }
@@ -72,7 +72,7 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
         GUILayout.EndHorizontal();
         GUILayout.Space(5);
 
-        // ��δassign��knowledge��
+        // »¹Î´assignµÄknowledge¿ò
         DrawUnassignedKnowledgeBox();
         GUILayout.Space(5);
 
@@ -140,7 +140,7 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
 
     private void AssignSelectedKnowledge()
     {
-        // ��ȡѡ�е�δassign��knowledge
+        // »ñÈ¡Ñ¡ÖÐµÄÎ´assignµÄknowledge
         List<Knowledge> selectedKnowledge = new List<Knowledge>();
         foreach (KeyValuePair<Knowledge, bool> entry in knowledgeSelection)
         {
@@ -150,18 +150,18 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
             }
         }
 
-        // ��ѡ�е�knowledge��δassign�б����Ƴ���������assign�б���
+        // ½«Ñ¡ÖÐµÄknowledge´ÓÎ´assignÁÐ±íÖÐÒÆ³ý£¬¼ÓÈëÒÑassignÁÐ±íÖÐ
         foreach (Knowledge knowledge in selectedKnowledge)
         {
             unassignedKnowledge.Remove(knowledge);
             assignedKnowledge.Add(knowledge);
-            knowledgeSelection[knowledge] = false; // ����Ϊδѡ��״̬
+            knowledgeSelection[knowledge] = false; // ÖØÖÃÎªÎ´Ñ¡ÖÐ×´Ì¬
         }
     }
 
     private void UnassignSelectedKnowledge()
     {
-        // ��ȡѡ�е���assign��knowledge
+        // »ñÈ¡Ñ¡ÖÐµÄÒÑassignµÄknowledge
         List<Knowledge> selectedKnowledge = new List<Knowledge>();
         foreach (KeyValuePair<Knowledge, bool> entry in knowledgeSelection)
         {
@@ -171,18 +171,18 @@ public class AssignKnowledgeToNPCWindow : EditorWindow
             }
         }
 
-        // ��ѡ�е�knowledge����assign�б����Ƴ�������δassign�б���
+        // ½«Ñ¡ÖÐµÄknowledge´ÓÒÑassignÁÐ±íÖÐÒÆ³ý£¬¼ÓÈëÎ´assignÁÐ±íÖÐ
         foreach (Knowledge knowledge in selectedKnowledge)
         {
             assignedKnowledge.Remove(knowledge);
             unassignedKnowledge.Add(knowledge);
-            knowledgeSelection[knowledge] = false; // ����Ϊδѡ��״̬
+            knowledgeSelection[knowledge] = false; // ÖØÖÃÎªÎ´Ñ¡ÖÐ×´Ì¬
         }
     }
 
     private async void SubmitAssignments()
     {
-        // �ύ��assign��knowledge�����ݿ�
+        // Ìá½»ÒÑassignµÄknowledgeµ½Êý¾Ý¿â
         bool success = await NPCManager.AssignKnowledgeToNPC(selectedNPC.Npc_id, assignedKnowledge);
 
         if (success)

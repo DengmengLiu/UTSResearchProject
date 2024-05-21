@@ -6965,8 +6965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca74b257ae7e7b48b34e1c5be4510f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quest: Your main quest for now is to greet the player, and introduce this world
-    to the player.
+  quest: Chat with Player
 --- !u!114 &1307667939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6981,18 +6980,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Button: {fileID: 1059932614}
   talkUI: {fileID: 1659081599}
---- !u!114 &1307667940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307667933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df7782bbf9b9c5c4cb3a8e598c3f6ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1352368294 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3347543616739314970, guid: cfcdd90acd280dc4bb804a4d1d482156, type: 3}
@@ -7720,7 +7707,7 @@ MonoBehaviour:
   textPanel: {fileID: 264601230}
   inputField: {fileID: 49704587}
   displayText: {fileID: 409243732}
-  textSpeed: 0.1
+  textSpeed: 0.01
   index: 0
 --- !u!1001 &1674480324
 PrefabInstance:
@@ -9725,7 +9712,6 @@ GameObject:
   - component: {fileID: 1840169157}
   - component: {fileID: 1840169155}
   - component: {fileID: 1840169156}
-  - component: {fileID: 1840169158}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -9909,18 +9895,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.88401604, y: 0.32261515}
   m_EdgeRadius: 0
---- !u!114 &1840169158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1840169151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4aa18de0ae0c78d4ebb72414ae3828b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1868256924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3347543616739314970, guid: 395806f958291e448b8557dbb80736dc, type: 3}
@@ -18425,9 +18399,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6371116112339839219, guid: 220a50ff78092a74293070f429c0ce43, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1307667939}
-    - targetCorrespondingSourceObject: {fileID: 6371116112339839219, guid: 220a50ff78092a74293070f429c0ce43, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1307667940}
   m_SourcePrefab: {fileID: 100100000, guid: 220a50ff78092a74293070f429c0ce43, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

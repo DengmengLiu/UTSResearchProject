@@ -35,8 +35,8 @@ CREATE TABLE NPCKnowledge (
 );
 
 CREATE TABLE Quest (
-    quest_id INT DEFAULT nextval('quest_id_seq')
-    quset_goal VARCHAR NOT NULL,
+    quest_id INT DEFAULT nextval('quest_id_seq'),
+    quest_goal VARCHAR NOT NULL,
 	quest_urgency INT,
 	quest_description VARCHAR,
     quest_vector vector(1536) NOT NULL,
@@ -83,26 +83,6 @@ REFERENCES NPC(npc_id)
 ON DELETE CASCADE
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
-
--- 创建生成随机向量的函数
-CREATE OR REPLACE FUNCTION generate_vector() RETURNS vector AS $$
-DECLARE
-    v float[] := '{}';
-BEGIN
-    FOR i IN 1..1536 LOOP
-        v := v || trunc(random() * 10) / 10;
-    END LOOP;
-    RETURN v;
-END;
-$$ LANGUAGE plpgsql;
-
-
-INSERT INTO Knowledge (knowledge_content, knowledge_vector) VALUES
-('Knowledge about artificial intelligence.', generate_vector()),
-('Knowledge about data analysis techniques.', generate_vector()),
-('Knowledge about machine learning algorithms.', generate_vector()),
-('Knowledge about natural language processing.', generate_vector()),
-('Knowledge about computer vision.', generate_vector());
 
 
 INSERT INTO NPC (npc_name, personality, person_summrise) VALUES

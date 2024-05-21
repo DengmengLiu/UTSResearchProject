@@ -5,7 +5,7 @@ public class DBConnWindow : EditorWindow
 {
     private string[] labels = { "Database Host", "Username", "Password", "Database Name" };
     private string[] textFields = new string[4];
-    private static bool isConnected = true;
+    private static bool isConnected = false;
     public static void CreateWindow()
     {
         DBConnWindow window = GetWindow<DBConnWindow>("Connection setup");

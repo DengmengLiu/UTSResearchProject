@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
@@ -105,7 +105,7 @@ public class DBWindow : EditorWindow
                 GUILayout.BeginHorizontal();
 
                 bool isSelected = selectedIndex == i;
-                if (GUILayout.Button(isSelected ? "¡Ì" : "", GUILayout.Width(20)))
+                if (GUILayout.Button(isSelected ? "âœ“" : "", GUILayout.Width(20)))
                 {
                     selectedIndex = isSelected ? -1 : i;
                 }
@@ -234,7 +234,7 @@ public class DBWindow : EditorWindow
                 GUILayout.BeginHorizontal();
 
                 bool isSelected = selectedIndex == i;
-                if (GUILayout.Button(isSelected ? "¡Ì" : "", GUILayout.Width(20)))
+                if (GUILayout.Button(isSelected ? "Â¡ÃŒ" : "", GUILayout.Width(20)))
                 {
                     selectedIndex = isSelected ? -1 : i;
                 }

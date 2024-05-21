@@ -78,7 +78,7 @@ public class AIManager : MonoBehaviour
                 Debug.Log(k.Knowledge_content+k.Knowledge_CosineDis);
             }
         }
-        userMessage.TextContent = content;
+        userMessage.TextContent += "\n Player says:" + content;
 
         //Debug
         Debug.Log(string.Format("{0}: {1}", userMessage.Role, userMessage.TextContent));
