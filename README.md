@@ -32,4 +32,23 @@ This project is designed to be used within the Unity Editor. Developers can:
 5.  Observe the AI-generated responses from the ChatGPT-powered NPC within the editor environment.
 6.  Use this functionality to test dialogue flows, refine NPC personalities, and quickly iterate on interactive elements without needing to build and run a full game demo.
 
-## Project Structure (Example - Adjust based on your actual structure)
+While specific setup instructions will depend on your implementation, the general steps might involve:
+
+1.  Obtain an API key from OpenAI for accessing the ChatGPT API.
+2.  Set up a PostgreSQL database and install the `pgvector` extension.
+3.  Configure the database connection details within your Unity project.
+4.  Import the necessary scripts and assets into your Unity project's `Editor` folder.
+5.  (Potentially) Create or import 3D models or other visual representations for your NPCs.
+6.  Utilize the custom editor windows or components provided by this project to begin interacting with AI-powered NPCs.
+
+## Potential Future Enhancements
+
+* Integration with visual dialogue editors for a more intuitive workflow.
+* Advanced context management and memory for NPCs.
+* Support for different OpenAI models and parameters.
+* Tools for easily populating the NPC knowledge base.
+* Options for exporting NPC dialogue data for use in runtime game builds.
+
+## Project Duration
+
+February 2024 - June 2024
