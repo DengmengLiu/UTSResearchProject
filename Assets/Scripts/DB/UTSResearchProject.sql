@@ -5,12 +5,12 @@ CREATE SEQUENCE IF NOT EXISTS knowledge_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS  npc_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS  quest_id_seq START 1;
 
-CREATE TABLE Dialog_histroy (
+CREATE TABLE Dialog_history (
     dialog_id INTEGER NOT NULL DEFAULT nextval('dialog_id_seq'),
     npc_id INTEGER NOT NULL,
     dialog_content VARCHAR NOT NULL,
     dialog_vetcor vector(1536) NOT NULL,
-    CONSTRAINT dialog_histroy_id PRIMARY KEY (dialog_id, npc_id)
+    CONSTRAINT dialog_history_id PRIMARY KEY (dialog_id, npc_id)
 );
 
 CREATE TABLE Knowledge (
@@ -24,7 +24,7 @@ CREATE TABLE NPC (
     npc_id INTEGER NOT NULL DEFAULT nextval('npc_id_seq'),
     npc_name VARCHAR NOT NULL,
     personality VARCHAR NOT NULL,
-    person_summrise VARCHAR NOT NULL,
+    person_summarise VARCHAR NOT NULL,
     CONSTRAINT npc_id PRIMARY KEY (npc_id)
 );
 
