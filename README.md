@@ -1,4 +1,4 @@
-# [UTS Research Project] AI-Powered NPC Interaction in Unity Editor with ChatGPT
+# [UTS Research Project] ChatGPT in Game Development -- Enhancing NPC Dialogues in Role-Playing Games Prototype
 
 ## Overview
 
@@ -43,11 +43,10 @@ While specific setup instructions will depend on your implementation, the genera
 
 ## Potential Future Enhancements
 
-* Integration with visual dialogue editors for a more intuitive workflow.
-* Advanced context management and memory for NPCs.
-* Support for different OpenAI models and parameters.
-* Tools for easily populating the NPC knowledge base.
-* Options for exporting NPC dialogue data for use in runtime game builds.
+* Dialog History Record and Embedding.
+* Improve the Speed and EƯiciency of Database Searching Algorithms.
+* Optimize User Interface (UI) / User Experience (UX) Design.
+* Fine-Tuning ChatGPT Model.
 
 ## Project Duration
 
