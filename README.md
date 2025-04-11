@@ -38,8 +38,7 @@ While specific setup instructions will depend on your implementation, the genera
 2.  Set up a PostgreSQL database and install the `pgvector` extension.
 3.  Configure the database connection details within your Unity project.
 4.  Import the necessary scripts and assets into your Unity project's `Editor` folder.
-5.  (Potentially) Create or import 3D models or other visual representations for your NPCs.
-6.  Utilize the custom editor windows or components provided by this project to begin interacting with AI-powered NPCs.
+5.  Utilize the custom editor windows or components provided by this project to begin interacting with AI-powered NPCs.
 
 ## Potential Future Enhancements
 
